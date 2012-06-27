@@ -1,7 +1,11 @@
 package MooX::Types::CLike;
+
+use sanity;
+
 use Exporter 5.57 'import';
 our @EXPORT_OK = ();
 
+use MooX::Types::MooseLike::Base;
 use Scalar::Util qw(blessed);
 use Config;
 use POSIX qw(ceil);
@@ -87,6 +91,7 @@ sub __integer_builder {
 # Looks like a float, stores like an int
 sub __money_builder {
    my ($bits, $scale, $names) = @_;
+   my $name = shift @$names;
    my $sbits = $bits - 1;
    
    # So, we have a base-10 scale and a base-2 set of $bits.  Lovely.
@@ -136,7 +141,9 @@ sub __float_builder {
 
    my $is_perl_safe = (
       Data::Float::significand_bits >= $sbits &&
-      Data::Float::max_finite_exp   >= 2 ** $ebits - 1
+      Data::Float::max_finite_exp   >= 2 ** $ebits - 1 &&
+      Data::Float::have_infinite &&
+      Data::Float::have_nan
    );
    my $digits = ceil( $sbits * BASE2_LOG );
    
@@ -160,8 +167,8 @@ sub __float_builder {
                   $val >= -$max and $val <= $max or
                   $val->is_nan() or
                   $val->is_inf('+') or
-                  $val->is_inf('-');
-               )
+                  $val->is_inf('-')
+               );
             },
          message    => sub { "$_[0] is not a $bits-bit binary floating point number!" },
       },
@@ -182,7 +189,9 @@ sub __decimal_builder {
    
    my $is_perl_safe = (
       Data::Float::significand_bits >= $sbits &&
-      Data::Float::max_finite_exp   >= $emax2
+      Data::Float::max_finite_exp   >= $emax2 &&
+      Data::Float::have_infinite &&
+      Data::Float::have_nan
    );
    
    # MAX = (1 + (1 - 10**(-$digits-1))) * 10**(10**$emax-1)
@@ -210,8 +219,8 @@ sub __decimal_builder {
                   $val >= -$max and $val <= $max or
                   $val->is_nan() or
                   $val->is_inf('+') or
-                  $val->is_inf('-');
-               )
+                  $val->is_inf('-')
+               );
             },
          message    => sub { "$_[0] is not a $bits-bit decimal floating point number!" },
       },
@@ -249,7 +258,7 @@ my $type_definitions = [
    ### "Money" definitions ###
    __money_builder( 32, 4, [qw(SmallMoney)]),
    __money_builder( 64, 4, [qw(Money Currency)]),
-   __money_builder(128, 4, [qw(BigMoney)]),
+   __money_builder(128, 6, [qw(BigMoney)]),
    
    ### Float definitions ###
    __float_builder( 16,  4, [qw(ShortFloat)]),
@@ -262,7 +271,7 @@ my $type_definitions = [
    __float_builder(128, 15, [qw(Quadruple Quad Float128 Binary128)]),
 
    ### Decimal definitions ###
-   __decimal_builder( 32,  7,   96, [' Decimal32']),
+   __decimal_builder( 32,  7,   96, [ 'Decimal32']),
    __decimal_builder( 64, 16,  384, [ 'Decimal64']),
    __decimal_builder(128, 34, 6144, ['Decimal128']),
    
@@ -289,8 +298,8 @@ our %EXPORT_TAGS = (
    'ieee754' => ['Binary16', map { ('Binary'.$_, 'Decimal'.$_) } (32,64,128) ],
    'tsql'    => [qw(TinyInt SmallInt Int BigInt SmallMoney Money Float64 Real)],
    'mysql'   => [ (map { ($_, 'Unsigned'.$_) } qw(TinyInt SmallInt MediumInt Int BigInt)), qw(Float Double)],
-   'ansisql' => [qw(SmallInt Int Float Real Double)]
-   'all'     => \@EXPORT_OK
+   'ansisql' => [qw(SmallInt Int Float Real Double)],
+   'all'     => \@EXPORT_OK,
 );
  
 1;
@@ -374,7 +383,7 @@ All available types (including lots of aliases) are listed below:
    
    ( 32,  4) = SmallMoney
    ( 64,  4) = Money Currency
-   (128,  4) = BigMoney
+   (128,  6) = BigMoney  # doesn't exist; might change if it does suddenly exists
    
    ### Chars ###
    WChar = Single character (with Perl's natural Unicode-compliance)
@@ -416,8 +425,13 @@ The confusion is even worse for float types, with the C<long> modifier sometimes
 nothing in certain hardware platforms.  C<Long> isn't even used in this module for those types, in
 favor of IEEE 754's "Extended" keyword.
 
+The floats will support infinity and NaN, since C floats support this.  This may not be desirable, so
+you might want to subtype the float and test for Inf/NaN if you don't want these.  Furthermore, the 
+"Perl safe" scalar tests for floats include checks to make sure it supports Inf/NaN.  However, the odds
+of it NOT supporting those (since Perl should be using IEEE 754 floats for NV) are practically zero.
+
 Hopefully, I've covered all possible types of floats found in the wild.  If not, let me know and I'll
-add it in.
+add it in.  (For that matter, let me know if I'm missing I<any> type found in the wild.)
 
 =head1 AUTHOR
  
