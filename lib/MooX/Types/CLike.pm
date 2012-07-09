@@ -1,11 +1,15 @@
 package MooX::Types::CLike;
 
+# VERSION
+# ABSTRACT: C-like data types for Moo
+
 use sanity;
 
 use Exporter 5.57 'import';
 our @EXPORT_OK = ();
 
-use MooX::Types::MooseLike::Base;
+use MooX::Types::MooseLike 0.06;
+use MooX::Types::MooseLike::Base 'is_Num';
 use Scalar::Util qw(blessed);
 use Config;
 use POSIX qw(ceil);
@@ -29,10 +33,7 @@ sub __alias_subtype {
 };
 
 my $bigtwo = Math::BigFloat->new(2);
-$bigtwo->accuracy(128);
-
 my $bigten = Math::BigFloat->new(10);
-$bigten->accuracy(128);
 
 sub __integer_builder {
    my ($bits, $signed_names, $unsigned_names) = @_;
@@ -43,13 +44,11 @@ sub __integer_builder {
    
    # Some pre-processing math
    my $is_perl_safe = $Config{ivsize} >= ceil($bits / 8);
-   my ($neg, $spos, $upos) = $is_perl_safe ?
-      (-2**$sbits, 2**$sbits-1, 2**$bits-1) :
-      (
-         $bigtwo->copy->bpow($sbits)->bmul(-1),
-         $bigtwo->copy->bpow($sbits)->bsub(1),
-         $bigtwo->copy->bpow( $bits)->bsub(1),
-      );
+   my ($neg, $spos, $upos) = (
+      $bigtwo->copy->bpow($sbits)->bmul(-1),
+      $bigtwo->copy->bpow($sbits)->bsub(1),
+      $bigtwo->copy->bpow( $bits)->bsub(1),
+   );
    my $sdigits = ceil( $sbits * BASE2_LOG );
    my $udigits = ceil(  $bits * BASE2_LOG );
    
@@ -62,10 +61,9 @@ sub __integer_builder {
             sub { $_[0] >= $neg and $_[0] <= $spos } :
             sub {
                my $val = $_[0];
-               blessed $val =~ /^Math::BigInt|^bigint/ and
+               blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $udigits and
-               $val >= $bigtwo->copy->bpow($sbits)->bmul(-1) and
-               $val <= $bigtwo->copy->bpow($sbits)->bsub(1);
+               $val >= $neg and $val <= $spos;
             },
          message    => sub { "$_[0] is not a $bits-bit signed integer!" },
       },
@@ -78,9 +76,9 @@ sub __integer_builder {
             sub { $_[0] >= 0 and $_[0] <= $upos } :
             sub {
                my $val = $_[0];
-               blessed $val =~ /^Math::BigInt|^bigint/ and
+               blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $udigits and
-               $val >= 0 and $val <= $bigtwo->copy->bpow($bits)->bsub(1);
+               $val >= 0 and $val <= $upos;
             },
          message    => sub { "$_[0] is not a $bits-bit unsigned integer!" },
       },
@@ -99,9 +97,11 @@ sub __money_builder {
    # $max, adjust with the $scale, and then go BACK to base-2 limits.
    my $div = $bigten->copy->bpow($scale);
    my ($neg, $pos) = (
-      $bigtwo->copy->bpow($sbits)->bmul(-1)->bdiv($bigten),
-      $bigtwo->copy->bpow($sbits)->bsub(1)->bdiv($bigten),
+      # bdiv returns (quo,rem) in list context :/
+      scalar $bigtwo->copy->bpow($sbits)->bmul(-1)->bdiv($div),
+      scalar $bigtwo->copy->bpow($sbits)->bsub(1)->bdiv($div),
    );
+
    my $digits = ceil( $sbits * BASE2_LOG );
    my $emin2  = ceil( $scale / BASE2_LOG );
    
@@ -119,7 +119,7 @@ sub __money_builder {
             sub { $_[0] >= $neg and $_[0] <= $pos } :
             sub {
                my $val = $_[0];
-               blessed $val =~ /^Math::BigFloat|^bignum/ and
+               blessed($val) and blessed($val) =~ /^Math::BigFloat|^bignum/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $digits and
                $val >= $neg and $val <= $pos
             },
@@ -134,10 +134,10 @@ sub __float_builder {
    my $name = shift @$names;
    my $sbits = $bits - 1 - $ebits;  # remove sign bit and exponent bits = significand precision
    
-   # MAX = (1 + (1 - 2**(-$sbits-1))) * 2**(2**$ebits-1)
-   my $emax_pow2 = $bigtwo->copy->bpow($ebits)->bsub(1);               # Y = (2**$ebits-1)
-   my $emin_pow2 = $bigtwo->copy->bpow(-$sbits-1)->bmul(-1)->badd(2);  # Z = (1 + (1 - X)) = -X + 2  (where X = 2**(-$sbits-1) )
-   my $max       = $bigtwo->copy->bpow($emax_pow2)->bmul($emin_pow2);  # MAX = 2**Y * Z
+   # MAX = (2 - 2**(-$sbits-1)) * 2**($ebits-1)
+   my $emax = $bigtwo->copy->bpow($ebits-1)->bsub(1);             # Y = (2**($ebits-1)-1)
+   my $smin = $bigtwo->copy->bpow(-$sbits-1)->bmul(-1)->badd(2);  # Z = (2 - X) = -X + 2  (where X = 2**(-$sbits-1) )
+   my $max  = $bigtwo->copy->bpow($emax)->bmul($smin);            # MAX = 2**Y * Z
 
    my $is_perl_safe = (
       Data::Float::significand_bits >= $sbits &&
@@ -150,24 +150,19 @@ sub __float_builder {
    return (
       {
          name       => $name,
-         subtype_of => 'Num',
-         from       => 'MooX::Types::MooseLike::Base',
+         subtype_of => 'NumOrNaNInf',
+         from       => __PACKAGE__,
          test       => $is_perl_safe ?
-            sub { 
+            sub {
                my $val = $_[0];
-               $val >= -$max and $val <= $max or
-               Data::Float::float_is_infinite($val) or
-               Data::Float::float_is_nan($val);
+               $val >= -$max and $val <= $max or is_NaNInf($val);
             } :
             sub {
                my $val = $_[0];
-               blessed $val =~ /^Math::BigFloat|^bignum/ and
+               blessed($val) and blessed($val) =~ /^Math::BigFloat|^bignum/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $digits and
                (
-                  $val >= -$max and $val <= $max or
-                  $val->is_nan() or
-                  $val->is_inf('+') or
-                  $val->is_inf('-')
+                  $val >= -$max and $val <= $max or is_NaNInf($val)
                );
             },
          message    => sub { "$_[0] is not a $bits-bit binary floating point number!" },
@@ -194,32 +189,24 @@ sub __decimal_builder {
       Data::Float::have_nan
    );
    
-   # MAX = (1 + (1 - 10**(-$digits-1))) * 10**(10**$emax-1)
-   my $emax_pow10 = $bigten->copy->bpow($emax)->bsub(1);                  # Y = (10**$emax-1)
-   my $emin_pow10 = $bigten->copy->bpow(-$digits-1)->bmul(-1)->badd(10);  # Z = (1 + (1 - X)) = -X + 10  (where X = 10**(-$digits-1) )
-   my $max        = $bigten->copy->bpow($emax_pow10)->bmul($emin_pow10);  # MAX = 10**Y * Z
+   my $max = $bigten->copy->bpow($emax)->bsub(1);
    
    return (
       {
          name       => $name,
-         subtype_of => 'Num',
-         from       => 'MooX::Types::MooseLike::Base',
+         subtype_of => 'NumOrNaNInf',
+         from       => __PACKAGE__,
          test       => $is_perl_safe ?
-            sub { 
+            sub {
                my $val = $_[0];
-               $val >= -$max and $val <= $max or
-               Data::Float::float_is_infinite($val) or
-               Data::Float::float_is_nan($val);
+               $val >= -$max and $val <= $max or is_NaNInf($val);
             } :
             sub {
                my $val = $_[0];
-               blessed $val =~ /^Math::BigFloat|^bignum/ and
+               blessed($val) and blessed($val) =~ /^Math::BigFloat|^bignum/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $digits and
                (
-                  $val >= -$max and $val <= $max or
-                  $val->is_nan() or
-                  $val->is_inf('+') or
-                  $val->is_inf('-')
+                  $val >= -$max and $val <= $max or is_NaNInf($val)
                );
             },
          message    => sub { "$_[0] is not a $bits-bit decimal floating point number!" },
@@ -261,6 +248,34 @@ my $type_definitions = [
    __money_builder(128, 6, [qw(BigMoney)]),
    
    ### Float definitions ###
+   {
+      name       => 'NaNInf',
+      test       => sub {
+         my $val = $_[0];
+         blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and (
+            $val->is_nan() or 
+            $val->is_inf('+') or
+            $val->is_inf('-')
+         ) or
+         defined $_[0] and is_Num($_[0]) and (  # is_Num first, since Data::Float might give "isn't numeric" warnings
+            Data::Float::float_is_infinite($val) or
+            Data::Float::float_is_nan($val)
+         );
+      },  
+      message    => sub { "$_[0] is not infinity or NaN!" },
+   },
+   {
+      name       => 'NumOrNaNInf',
+      subtype_of => 'NonBigInt',
+      from       => __PACKAGE__,
+      test       => sub { is_Num($_[0]) || is_NaNInf($_[0]) },  
+      message    => sub { "$_[0] is not a number, infinity, or NaN!" },
+   },
+   {
+      name       => 'NonBigInt',
+      test       => sub { (blessed($_[0]) and blessed($_[0]) =~ /^Math::BigInt|^bigint/ and not $_[0]->upgrade) ? 0 : 1; },
+      message    => sub { "$_[0] is not a float safe number!" },
+   },
    __float_builder( 16,  4, [qw(ShortFloat)]),
    __float_builder( 16,  5, [qw(Half Float16 Binary16)]),
    __float_builder( 32,  8, [qw(Single Real Float Float32 Binary32)]),
@@ -291,7 +306,8 @@ my $type_definitions = [
 ];
  
 MooX::Types::MooseLike::register_types($type_definitions, __PACKAGE__);  ### TODO: MooseX translation ###
-our %EXPORT_TAGS = (
+
+my %base_tags = (
    'c'       => [qw(Char Byte Short UShort Int UInt Long ULong Float Double ExtendedDouble)],
    'stdint'  => [ map { ('Int'.$_, 'UInt'.$_) } (4,8,16,32,64,128) ],
    'c#'      => [qw(SByte Byte Char16 Short UShort Int UInt Long ULong Float Double Decimal)],
@@ -299,9 +315,21 @@ our %EXPORT_TAGS = (
    'tsql'    => [qw(TinyInt SmallInt Int BigInt SmallMoney Money Float64 Real)],
    'mysql'   => [ (map { ($_, 'Unsigned'.$_) } qw(TinyInt SmallInt MediumInt Int BigInt)), qw(Float Double)],
    'ansisql' => [qw(SmallInt Int Float Real Double)],
-   'all'     => \@EXPORT_OK,
 );
- 
+my %is_tags = (
+   map {
+      my $k = $_;
+      'is_'.$k => [ map { 'is_'.$_ } @{$base_tags{$k}} ];
+   } keys %base_tags
+);
+
+our %EXPORT_TAGS = (
+   %base_tags,
+   %is_tags,
+   ( map { $_.'+is' => [ @{$base_tags{$_}}, @{$is_tags{'is_'.$_}} ] } keys %base_tags ),
+   'all' => \@EXPORT_OK,
+);
+   
 1;
  
 __END__
@@ -315,15 +343,25 @@ MooX::Types::CLike - C-like types for Moo
    package MyPackage;
    use Moo;
    use MooX::Types::CLike qw(:all);
-    
+
    has 'foo' => (
       isa => Int     # or Int32, Signed32
    );
    has 'bar' => (
       isa => Short   # or SmallInt, Int16, Signed16
    );
+
+   use Scalar::Util qw(blessed);
+   use Math::BigFloat;
+
    has 'baz' => (
       isa => Double  # or Float64, Binary64
+      
+      # A Double number gets pretty big, so make sure we use big numbers
+      coerce => quote_sub q{
+         Math::BigFloat->new($_[0])
+            unless (blessed $_[0] =~ /^Math::BigFloat|^bignum/);
+      },
    );
    
 =head1 DESCRIPTION
@@ -335,7 +373,10 @@ module covers the gamut of the various number and character types in all of thos
 The number types will validate that the number falls within the right bit length, that unsigned
 numbers do not go below zero, and "Perl unsafe" numbers are using either Math::Big* or
 bignum/bigfloat.  (Whether a number is "Perl safe" depends on your Perl's
-C<L<http://perldoc.perl.org/Config.html#ivsize|ivsize>>, or data from L<Data::Float>.)
+C<L<http://perldoc.perl.org/Config.html#ivsize|ivsize>>, or data from L<Data::Float>.)  Big
+numbers are also checked to make sure they have an accuracy that supports the right number of
+significant decimal digits.  (However, BigInt/Float defaults to 40 digits, which is above the
+34 digits for 128-bit numbers, so you should be safe.)
 
 Char types will validate that it's a single character, using Perl's Unicode-complaint C<length>
 function.  The bit check types (all of them other than C<WChar>) will also check that the
@@ -405,6 +446,9 @@ isn't a good idea.  So, there are some Exporter tags available, grouped by langu
    :mysql   = TinyInt SmallInt MediumInt Int BigInt (and Unsigned versions) Float Double
    :ansisql = SmallInt Int Float Real Double
    
+   :is_*    = All of the is_* functions for that tag
+   :*+is    = Both the Moo and is_* functions for that tag
+   
 =head1 CAVEATS
 
 The C<Int> type is also used by L<MooX::Types::MooseLike::Base>, and is even used (but not exported)
@@ -432,9 +476,5 @@ of it NOT supporting those (since Perl should be using IEEE 754 floats for NV) a
 
 Hopefully, I've covered all possible types of floats found in the wild.  If not, let me know and I'll
 add it in.  (For that matter, let me know if I'm missing I<any> type found in the wild.)
-
-=head1 AUTHOR
- 
-Brendan Byrd / SineSwiper C<BBYRD@CPAN.org>
 
 =cut
