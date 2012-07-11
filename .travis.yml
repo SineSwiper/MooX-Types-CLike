@@ -1,0 +1,22 @@
+language: perl
+perl:
+   - "5.16"
+   - "5.14"
+   - "5.12"
+   - "5.10"
+
+install:
+   # Install the lowest possible required version for the dependencies
+   - cpanm ZEFRAM/Data-Float-0.000.tar.gz
+   - cpanm MATEU/MooX-Types-MooseLike-0.06.tar.gz
+   - cpanm MSTROUT/Moo-0.009001.tar.gz
+   - cpanm ADIE/Test-Exception-0.07.tar.gz
+
+# whitelist
+branches:
+   only:
+     - /^build\/.*/
+
+notifications:
+   irc:
+      - "irc.perl.org#web-simple"
