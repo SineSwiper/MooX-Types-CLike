@@ -15,7 +15,8 @@ my %WriteMakefileArgs = (
     "Moo" => "0.009001",
     "Test::CheckDeps" => "0.002",
     "Test::Exception" => "0.27",
-    "Test::UseAllModules" => "0.10"
+    "Test::UseAllModules" => "0.10",
+    "sanity" => "0.91"
   },
   "CONFIGURE_REQUIRES" => {},
   "DISTNAME" => "MooX-Types-CLike",
@@ -24,8 +25,7 @@ my %WriteMakefileArgs = (
   "NAME" => "MooX::Types::CLike",
   "PREREQ_PM" => {
     "Data::Float" => "0.008",
-    "MooX::Types::MooseLike" => "0.06",
-    "sanity" => "0.91"
+    "MooX::Types::MooseLike" => "0.06"
   },
   "VERSION" => "0.90",
   "test" => {
