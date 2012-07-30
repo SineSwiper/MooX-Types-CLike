@@ -32,13 +32,11 @@
       },
       "test" : {
          "requires" : {
-            "Data::Dump" : "1.10",
             "Devel::SimpleTrace" : "0.07",
             "Moo" : "0.009001",
             "Test::CheckDeps" : "0.002",
             "Test::Exception" : "0.27",
-            "Test::UseAllModules" : "0.10",
-            "perl" : "v5.10.0"
+            "Test::UseAllModules" : "0.10"
          }
       }
    },

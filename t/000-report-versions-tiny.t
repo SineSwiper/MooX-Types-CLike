@@ -49,7 +49,6 @@ sub pmver {
     return sprintf('%-45s => %-10s%-15s%s', $module, $pmver, $wanted, "\n");
 }
 
-eval { $v .= pmver('Data::Dump','1.10') };
 eval { $v .= pmver('Data::Float','0.008') };
 eval { $v .= pmver('Devel::SimpleTrace','0.07') };
 eval { $v .= pmver('Moo','0.009001') };
