@@ -8,7 +8,7 @@ use MooX::Types::MooseLike::Base;
 use MooX::Types::CLike ':all';
 
 use Data::Dump;
-dd [ keys %Dummy::CLike::Test:: ];
+warn join "\n", keys %Dummy::CLike::Test::;
 
 no strict 'refs';
 foreach my $name (@exports) {
