@@ -24,6 +24,7 @@ my %WriteMakefileArgs = (
   "LICENSE" => "artistic_2",
   "NAME" => "MooX::Types::CLike",
   "PREREQ_PM" => {
+    "Data::Dump" => "1.10",
     "Data::Float" => "0.008",
     "MooX::Types::MooseLike" => "0.06",
     "sanity" => "0.91"
