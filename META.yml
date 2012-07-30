@@ -25,7 +25,6 @@ prereqs:
       sanity: 0.91
   test:
     requires:
-      Devel::SimpleTrace: 0.07
       Moo: 0.009001
       Test::CheckDeps: 0.002
       Test::Exception: 0.27

@@ -23,7 +23,6 @@ use sanity;
 
 use Test::More;
 use Test::Exception;
-use Devel::SimpleTrace;
 use Data::Float;
 use Math::BigInt;
 use Math::BigFloat;

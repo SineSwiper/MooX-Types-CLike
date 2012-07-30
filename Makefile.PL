@@ -12,7 +12,6 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "C-like data types for Moo",
   "AUTHOR" => "Brendan Byrd <BBYRD\@CPAN.org>",
   "BUILD_REQUIRES" => {
-    "Devel::SimpleTrace" => "0.07",
     "Moo" => "0.009001",
     "Test::CheckDeps" => "0.002",
     "Test::Exception" => "0.27",

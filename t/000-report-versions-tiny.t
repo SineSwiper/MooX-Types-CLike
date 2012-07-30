@@ -50,7 +50,6 @@ sub pmver {
 }
 
 eval { $v .= pmver('Data::Float','0.008') };
-eval { $v .= pmver('Devel::SimpleTrace','0.07') };
 eval { $v .= pmver('Moo','0.009001') };
 eval { $v .= pmver('MooX::Types::MooseLike','0.06') };
 eval { $v .= pmver('Test::CheckDeps','0.002') };
