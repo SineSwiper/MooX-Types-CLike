@@ -5,8 +5,10 @@ package Dummy::CLike::Test;
 use sanity '-namespace::sweep';  # (using Exporter here...)
 use Moo;
 use MooX::Types::MooseLike::Base;
-use MooX::Types::CLike qw(:all);
-use Devel::SimpleTrace;
+use MooX::Types::CLike ':all';
+
+use Data::Dump;
+dd [ keys %Dummy::CLike::Test:: ];
 
 no strict 'refs';
 foreach my $name (@exports) {

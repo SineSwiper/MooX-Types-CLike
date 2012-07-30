@@ -12,6 +12,7 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "C-like data types for Moo",
   "AUTHOR" => "Brendan Byrd <BBYRD\@CPAN.org>",
   "BUILD_REQUIRES" => {
+    "Data::Dump" => "1.10",
     "Devel::SimpleTrace" => "0.07",
     "Moo" => "0.009001",
     "Test::CheckDeps" => "0.002",
