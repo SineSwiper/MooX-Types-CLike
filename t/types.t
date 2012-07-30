@@ -22,6 +22,7 @@ foreach my $name (@exports) {
 }
    
 package main;
+
 #use sanity '-namespace::sweep';  # (using Exporter here...)
 use v5.10;
 
