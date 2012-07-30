@@ -5,7 +5,7 @@ package MooX::Types::CLike;
 
 use sanity;
 
-use Exporter 5.57 'import';
+use parent 'Exporter';
 our @EXPORT_OK = ();
 
 use MooX::Types::MooseLike 0.06;

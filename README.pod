@@ -1,12 +1,10 @@
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 MooX::Types::CLike - C-like data types for Moo
-
-=head1 VERSION
-
-version 0.9
 
 =head1 SYNOPSIS
 
@@ -150,6 +148,39 @@ of it NOT supporting those (since Perl should be using IEEE 754 floats for NV) a
 
 Hopefully, I've covered all possible types of floats found in the wild.  If not, let me know and I'll
 add it in.  (For that matter, let me know if I'm missing I<any> type found in the wild.)
+
+=head1 AVAILABILITY
+
+The project homepage is L<https://github.com/SineSwiper/MooX-Types-CLike/wiki>.
+
+The latest version of this module is available from the Comprehensive Perl
+Archive Network (CPAN). Visit L<http://www.perl.com/CPAN/> to find a CPAN
+site near you, or see L<https://metacpan.org/module/MooX::Types::CLike/>.
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Internet Relay Chat
+
+You can get live help by using IRC ( Internet Relay Chat ). If you don't know what IRC is,
+please read this excellent guide: L<http://en.wikipedia.org/wiki/Internet_Relay_Chat>. Please
+be courteous and patient when talking to us, as we might be busy or sleeping! You can join
+those networks/channels and get help:
+
+=over 4
+
+=item *
+
+irc.perl.org
+
+You can connect to the server at 'irc.perl.org' and join this channel: #distzilla then talk to this person for help: SineSwiper.
+
+=back
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests via L<https://github.com/SineSwiper/MooX-Types-CLike/issues>.
 
 =head1 AUTHOR
 

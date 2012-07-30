@@ -2,10 +2,12 @@ my @exports = grep { !/^is_|NaNInf|^NonBigInt$/ } @MooX::Types::CLike::EXPORT_OK
 
 # Can't use "package NAMESPACE BLOCK" yet :(
 package Dummy::CLike::Test;
-use sanity;
+
+use sanity '-namespace::sweep';  # (using dual subrefs here...)
+
 use Moo;
 use MooX::Types::MooseLike::Base;
-use MooX::Types::CLike qw(:all);
+use MooX::Types::CLike ':all';
 
 no strict 'refs';
 foreach my $name (@exports) {
@@ -16,10 +18,11 @@ foreach my $name (@exports) {
 }
    
 package main;
+
 use sanity;
+
 use Test::More;
 use Test::Exception;
-#use Devel::SimpleTrace;
 use Data::Float;
 use Math::BigInt;
 use Math::BigFloat;
