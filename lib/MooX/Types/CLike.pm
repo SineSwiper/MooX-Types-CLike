@@ -331,7 +331,7 @@ our %EXPORT_TAGS = (
 );
 
 use Data::Dump;
-dd \%EXPORT_TAGS;
+warn quote( \%EXPORT_TAGS );
    
 1;
  
