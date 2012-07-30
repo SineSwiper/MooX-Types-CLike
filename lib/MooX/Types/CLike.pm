@@ -17,7 +17,7 @@ use Math::BigInt;
 use Math::BigFloat;
 use Data::Float;
 use constant {
-   BASE2_LOG => log(2) / log(10),
+   _BASE2_LOG => log(2) / log(10),
 };
 
 # these get repeated a lot
@@ -49,8 +49,8 @@ sub __integer_builder {
       $bigtwo->copy->bpow($sbits)->bsub(1),
       $bigtwo->copy->bpow( $bits)->bsub(1),
    );
-   my $sdigits = ceil( $sbits * BASE2_LOG );
-   my $udigits = ceil(  $bits * BASE2_LOG );
+   my $sdigits = ceil( $sbits * _BASE2_LOG );
+   my $udigits = ceil(  $bits * _BASE2_LOG );
    
    return (
       {
@@ -102,8 +102,8 @@ sub __money_builder {
       scalar $bigtwo->copy->bpow($sbits)->bsub(1)->bdiv($div),
    );
 
-   my $digits = ceil( $sbits * BASE2_LOG );
-   my $emin2  = ceil( $scale / BASE2_LOG );
+   my $digits = ceil( $sbits * _BASE2_LOG );
+   my $emin2  = ceil( $scale / _BASE2_LOG );
    
    my $is_perl_safe = (
       Data::Float::significand_bits >= $sbits &&
@@ -145,7 +145,7 @@ sub __float_builder {
       Data::Float::have_infinite &&
       Data::Float::have_nan
    );
-   my $digits = ceil( $sbits * BASE2_LOG );
+   my $digits = ceil( $sbits * _BASE2_LOG );
    
    return (
       {
@@ -179,8 +179,8 @@ sub __decimal_builder {
    # We're not going to worry about the (extreme) edge case that
    # Perl might be compiled with decimal float NVs, but we still
    # need to convert to base-2.
-   my $sbits = ceil( $digits / BASE2_LOG );
-   my $emax2 = ceil( $emax   / BASE2_LOG );
+   my $sbits = ceil( $digits / _BASE2_LOG );
+   my $emax2 = ceil( $emax   / _BASE2_LOG );
    
    my $is_perl_safe = (
       Data::Float::significand_bits >= $sbits &&
@@ -357,6 +357,7 @@ MooX::Types::CLike - C-like data types for Moo
 
    use Scalar::Util qw(blessed);
    use Math::BigFloat;
+   use Sub::Quote;
 
    has 'baz' => (
       isa => Double  # or Float64, Binary64
