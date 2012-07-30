@@ -26,8 +26,7 @@
          "requires" : {
             "Data::Float" : "0.008",
             "MooX::Types::MooseLike" : "0.06",
-            "perl" : "v5.10.1",
-            "sanity" : "0.91"
+            "perl" : "v5.10.1"
          }
       },
       "test" : {

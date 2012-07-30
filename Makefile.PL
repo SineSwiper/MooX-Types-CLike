@@ -26,8 +26,7 @@ my %WriteMakefileArgs = (
   "NAME" => "MooX::Types::CLike",
   "PREREQ_PM" => {
     "Data::Float" => "0.008",
-    "MooX::Types::MooseLike" => "0.06",
-    "sanity" => "0.91"
+    "MooX::Types::MooseLike" => "0.06"
   },
   "VERSION" => "0.90",
   "test" => {

@@ -3,7 +3,8 @@ package MooX::Types::CLike;
 our $VERSION = '0.90'; # VERSION
 # ABSTRACT: C-like data types for Moo
 
-use sanity '-namespace::sweep';  # (using Exporter here...)
+#use sanity '-namespace::sweep';  # (using Exporter here...)
+use v5.10;
 
 use Exporter 5.57;
 our @EXPORT_OK = ();

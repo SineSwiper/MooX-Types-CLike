@@ -57,7 +57,6 @@ eval { $v .= pmver('MooX::Types::MooseLike','0.06') };
 eval { $v .= pmver('Test::CheckDeps','0.002') };
 eval { $v .= pmver('Test::Exception','0.27') };
 eval { $v .= pmver('Test::UseAllModules','0.10') };
-eval { $v .= pmver('sanity','0.91') };
 
 
 # All done.
