@@ -6,6 +6,7 @@ use sanity;
 use Moo;
 use MooX::Types::MooseLike::Base;
 use MooX::Types::CLike qw(:all);
+use Devel::SimpleTrace;
 
 no strict 'refs';
 foreach my $name (@exports) {
@@ -19,7 +20,7 @@ package main;
 use sanity;
 use Test::More;
 use Test::Exception;
-#use Devel::SimpleTrace;
+use Devel::SimpleTrace;
 use Data::Float;
 use Math::BigInt;
 use Math::BigFloat;
