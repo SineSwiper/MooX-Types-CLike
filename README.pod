@@ -21,6 +21,7 @@ MooX::Types::CLike - C-like data types for Moo
 
    use Scalar::Util qw(blessed);
    use Math::BigFloat;
+   use Sub::Quote;
 
    has 'baz' => (
       isa => Double  # or Float64, Binary64
