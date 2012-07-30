@@ -329,9 +329,6 @@ our %EXPORT_TAGS = (
    ( map { $_.'+is' => [ @{$base_tags{$_}}, @{$is_tags{'is_'.$_}} ] } keys %base_tags ),
    'all' => \@EXPORT_OK,
 );
-
-use Data::Dump;
-warn quote( \%EXPORT_TAGS );
    
 1;
  

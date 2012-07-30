@@ -24,7 +24,6 @@
    "prereqs" : {
       "runtime" : {
          "requires" : {
-            "Data::Dump" : "1.10",
             "Data::Float" : "0.008",
             "MooX::Types::MooseLike" : "0.06",
             "perl" : "v5.10.1",
