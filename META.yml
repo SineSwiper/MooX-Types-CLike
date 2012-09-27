@@ -3,7 +3,7 @@ abstract: 'C-like data types for Moo'
 author:
   - 'Brendan Byrd <BBYRD@CPAN.org>'
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300020, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Dist::Zilla version 4.300023, CPAN::Meta::Converter version 2.120921'
 license:
   - artistic_2
 meta-spec:
@@ -32,7 +32,7 @@ prereqs:
 provides:
   MooX::Types::CLike:
     file: lib/MooX/Types/CLike.pm
-    version: 0.90
+    version: 0.91
 release_status: stable
 resources:
   bugtracker:
@@ -43,7 +43,7 @@ resources:
     url: git://github.com/SineSwiper/MooX-Types-CLike.git
     web: https://github.com/SineSwiper/MooX-Types-CLike
   x_irc: irc://irc.perl.org/#distzilla
-version: 0.90
+version: 0.91
 x_Dist_Zilla:
   plugins:
     -
@@ -53,15 +53,15 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::MakeMaker
       name: MakeMaker
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::Git::NextVersion
       name: Git::NextVersion
-      version: 1.121820
+      version: 1.122460
     -
       class: Dist::Zilla::Plugin::Git::GatherDir
       name: Git::GatherDir
-      version: 1.121820
+      version: 1.122460
     -
       class: Dist::Zilla::Plugin::OurPkgVersion
       name: OurPkgVersion
@@ -73,7 +73,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::PruneCruft
       name: PruneCruft
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::GitFmtChanges
       name: GitFmtChanges
@@ -81,15 +81,15 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::ManifestSkip
       name: ManifestSkip
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::Manifest
       name: Manifest
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::License
       name: License
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::ReadmeAnyFromPod
       name: ReadmeHtmlInBuild
@@ -105,7 +105,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::ExecDir
       name: ExecDir
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::Test::Compile
       name: Test::Compile
@@ -113,11 +113,11 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::PodCoverageTests
       name: PodCoverageTests
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::PodSyntaxTests
       name: PodSyntaxTests
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::RunExtraTests
       name: RunExtraTests
@@ -173,7 +173,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::AutoPrereqs
       name: '@Prereqs/AutoPrereqs'
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::MinimumPerl
       name: '@Prereqs/MinimumPerl'
@@ -193,19 +193,19 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::MetaConfig
       name: MetaConfig
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::MetaJSON
       name: MetaJSON
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::MetaYAML
       name: MetaYAML
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::MetaNoIndex
       name: MetaNoIndex
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::MetaProvides::Package
       name: MetaProvides::Package
@@ -221,7 +221,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::TravisYML
       name: TravisYML
-      version: ~
+      version: 0.92
     -
       class: Dist::Zilla::Plugin::Git::CheckFor::CorrectBranch
       name: Git::CheckFor::CorrectBranch
@@ -229,35 +229,35 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Git::CommitBuild
       name: Git::CommitBuild
-      version: 1.121820
+      version: 1.122460
     -
       class: Dist::Zilla::Plugin::Git::Check
       name: '@Git/Check'
-      version: 1.121820
+      version: 1.122460
     -
       class: Dist::Zilla::Plugin::Git::Commit
       name: '@Git/Commit'
-      version: 1.121820
+      version: 1.122460
     -
       class: Dist::Zilla::Plugin::Git::Tag
       name: '@Git/Tag'
-      version: 1.121820
+      version: 1.122460
     -
       class: Dist::Zilla::Plugin::Git::Push
       name: '@Git/Push'
-      version: 1.121820
+      version: 1.122460
     -
       class: Dist::Zilla::Plugin::TestRelease
       name: TestRelease
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::ConfirmRelease
       name: ConfirmRelease
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::UploadToCPAN
       name: UploadToCPAN
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::InstallRelease
       name: InstallRelease
@@ -269,29 +269,29 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':InstallModules'
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':IncModules'
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':TestFiles'
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':ExecFiles'
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':ShareFiles'
-      version: 4.300020
+      version: 4.300023
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':MainModule'
-      version: 4.300020
+      version: 4.300023
   zilla:
     class: Dist::Zilla::Dist::Builder
     config:
       is_trial: 0
-    version: 4.300020
+    version: 4.300023
