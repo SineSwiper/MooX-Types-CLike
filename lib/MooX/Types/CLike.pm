@@ -58,12 +58,12 @@ sub __integer_builder {
          subtype_of => 'Int',
          from       => 'MooX::Types::MooseLike::Base',
          test       => $is_perl_safe ?
-            sub { $_[0] >= $neg and $_[0] <= $spos } :
+            sub { $_[0] >= $neg and $_[0] <= $spos and !is_NaNInf($_[0]) } :
             sub {
                my $val = $_[0];
                blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $udigits and
-               $val >= $neg and $val <= $spos;
+               $val >= $neg and $val <= $spos and !is_NaNInf($val);
             },
          message    => sub { "$_[0] is not a $bits-bit signed integer!" },
       },
@@ -73,12 +73,12 @@ sub __integer_builder {
          subtype_of => 'Int',
          from       => 'MooX::Types::MooseLike::Base',
          test       => $is_perl_safe ?
-            sub { $_[0] >= 0 and $_[0] <= $upos } :
+            sub { $_[0] >= 0 and $_[0] <= $upos and !is_NaNInf($_[0]) } :
             sub {
                my $val = $_[0];
                blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $udigits and
-               $val >= 0 and $val <= $upos;
+               $val >= 0 and $val <= $upos and !is_NaNInf($val);
             },
          message    => sub { "$_[0] is not a $bits-bit unsigned integer!" },
       },
@@ -374,7 +374,7 @@ module covers the gamut of the various number and character types in all of thos
 The number types will validate that the number falls within the right bit length, that unsigned
 numbers do not go below zero, and "Perl unsafe" numbers are using either Math::Big* or
 bignum/bigfloat.  (Whether a number is "Perl safe" depends on your Perl's
-C<L<http://perldoc.perl.org/Config.html#ivsize|ivsize>>, or data from L<Data::Float>.)  Big
+L<http://perldoc.perl.org/Config.html#ivsize|ivsize>, or data from L<Data::Float>.)  Big
 numbers are also checked to make sure they have an accuracy that supports the right number of
 significant decimal digits.  (However, BigInt/Float defaults to 40 digits, which is above the
 34 digits for 128-bit numbers, so you should be safe.)
