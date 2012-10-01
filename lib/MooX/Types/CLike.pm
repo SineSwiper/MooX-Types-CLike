@@ -58,12 +58,12 @@ sub __integer_builder {
          subtype_of => 'Int',
          from       => 'MooX::Types::MooseLike::Base',
          test       => $is_perl_safe ?
-            sub { $_[0] >= $neg and $_[0] <= $spos } :
+            sub { $_[0] >= $neg and $_[0] <= $spos and !is_NaNInf($_[0]) } :
             sub {
                my $val = $_[0];
                blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $udigits and
-               $val >= $neg and $val <= $spos;
+               $val >= $neg and $val <= $spos and !is_NaNInf($val);
             },
          message    => sub { "$_[0] is not a $bits-bit signed integer!" },
       },
@@ -73,12 +73,12 @@ sub __integer_builder {
          subtype_of => 'Int',
          from       => 'MooX::Types::MooseLike::Base',
          test       => $is_perl_safe ?
-            sub { $_[0] >= 0 and $_[0] <= $upos } :
+            sub { $_[0] >= 0 and $_[0] <= $upos and !is_NaNInf($_[0]) } :
             sub {
                my $val = $_[0];
                blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and
                ( $val->accuracy || $val->precision || $val->div_scale ) >= $udigits and
-               $val >= 0 and $val <= $upos;
+               $val >= 0 and $val <= $upos and !is_NaNInf($val);
             },
          message    => sub { "$_[0] is not a $bits-bit unsigned integer!" },
       },
