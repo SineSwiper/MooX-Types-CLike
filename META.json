@@ -48,14 +48,15 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=MooX-Types-CLike"
+         "web" : "https://github.com/SineSwiper/MooX-Types-CLike/issues"
       },
       "homepage" : "https://github.com/SineSwiper/MooX-Types-CLike/wiki",
       "repository" : {
          "type" : "git",
          "url" : "git://github.com/SineSwiper/MooX-Types-CLike.git",
          "web" : "https://github.com/SineSwiper/MooX-Types-CLike"
-      }
+      },
+      "x_irc" : "irc://irc.perl.org/#web-simple"
    },
    "version" : "0.91",
    "x_Dist_Zilla" : {

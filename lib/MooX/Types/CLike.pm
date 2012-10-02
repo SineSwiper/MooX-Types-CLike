@@ -517,7 +517,7 @@ You can connect to the server at 'irc.perl.org' and join this channel: #distzill
 
 =head2 Bugs / Feature Requests
 
-Please report any bugs or feature requests via L<https://rt.cpan.org/Public/Dist/Display.html?Name=MooX-Types-CLike>.
+Please report any bugs or feature requests via L<https://github.com/SineSwiper/MooX-Types-CLike/issues>.
 
 =head1 AUTHOR
 
