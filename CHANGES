@@ -1,6 +1,16 @@
 Revision History for MooX-Types-CLike
 =====================================
 
+v0.91 2012-10-02
+----------------
+
+commit 8f4f4218cbaa236a6b297c7ce3e54472ecf06f94
+Author: Brendan Byrd <Perl@ResonatorSoft.org>
+Date:   Mon Oct 1 08:39:57 2012 -0400
+
+    Fix NaN/inf checks for integers (some OSs report NaN as "0")
+    Fix minor doc bug
+
 ===================================
 End of changes in the last 365 days
 ===================================
