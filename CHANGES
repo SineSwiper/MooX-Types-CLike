@@ -4,6 +4,12 @@ Revision History for MooX-Types-CLike
 v0.91 2012-10-02
 ----------------
 
+commit f085d94bb889c1c706c785f7ca7da1222675d0dd
+Author: Brendan Byrd <Perl@ResonatorSoft.org>
+Date:   Tue Oct 2 11:27:08 2012 -0400
+
+    Simplify dist.ini
+
 commit 8f4f4218cbaa236a6b297c7ce3e54472ecf06f94
 Author: Brendan Byrd <Perl@ResonatorSoft.org>
 Date:   Mon Oct 1 08:39:57 2012 -0400
