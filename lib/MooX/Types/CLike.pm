@@ -1,6 +1,6 @@
 package MooX::Types::CLike;
 
-our $VERSION = '0.91'; # VERSION
+our $VERSION = '0.92'; # VERSION
 # ABSTRACT: C-like data types for Moo
 
 use sanity;
