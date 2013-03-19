@@ -37,11 +37,11 @@ my $bigten = Math::BigFloat->new(10);
 
 sub __integer_builder {
    my ($bits, $signed_names, $unsigned_names) = @_;
-   
+
    my   $signed = shift   @$signed_names;
    my $unsigned = shift @$unsigned_names;
    my $sbits = $bits - 1;
-   
+
    # Some pre-processing math
    my $is_perl_safe = $Config{ivsize} >= ceil($bits / 8);
    my ($neg, $spos, $upos) = (
@@ -51,7 +51,7 @@ sub __integer_builder {
    );
    my $sdigits = ceil( $sbits * _BASE2_LOG );
    my $udigits = ceil(  $bits * _BASE2_LOG );
-   
+
    return (
       {
          name       => $signed,
@@ -91,7 +91,7 @@ sub __money_builder {
    my ($bits, $scale, $names) = @_;
    my $name = shift @$names;
    my $sbits = $bits - 1;
-   
+
    # So, we have a base-10 scale and a base-2 set of $bits.  Lovely.
    # We can't actually figure out if it's Perl safe until we find the
    # $max, adjust with the $scale, and then go BACK to base-2 limits.
@@ -104,12 +104,12 @@ sub __money_builder {
 
    my $digits = ceil( $sbits * _BASE2_LOG );
    my $emin2  = ceil( $scale / _BASE2_LOG );
-   
+
    my $is_perl_safe = (
       Data::Float::significand_bits >= $sbits &&
       Data::Float::min_finite_exp   <= -$emin2
    );
-   
+
    return (
       {
          name       => $name,
@@ -133,7 +133,7 @@ sub __float_builder {
    my ($bits, $ebits, $names) = @_;
    my $name = shift @$names;
    my $sbits = $bits - 1 - $ebits;  # remove sign bit and exponent bits = significand precision
-   
+
    # MAX = (2 - 2**(-$sbits-1)) * 2**($ebits-1)
    my $emax = $bigtwo->copy->bpow($ebits-1)->bsub(1);             # Y = (2**($ebits-1)-1)
    my $smin = $bigtwo->copy->bpow(-$sbits-1)->bmul(-1)->badd(2);  # Z = (2 - X) = -X + 2  (where X = 2**(-$sbits-1) )
@@ -146,7 +146,7 @@ sub __float_builder {
       Data::Float::have_nan
    );
    my $digits = ceil( $sbits * _BASE2_LOG );
-   
+
    return (
       {
          name       => $name,
@@ -181,16 +181,16 @@ sub __decimal_builder {
    # need to convert to base-2.
    my $sbits = ceil( $digits / _BASE2_LOG );
    my $emax2 = ceil( $emax   / _BASE2_LOG );
-   
+
    my $is_perl_safe = (
       Data::Float::significand_bits >= $sbits &&
       Data::Float::max_finite_exp   >= $emax2 &&
       Data::Float::have_infinite &&
       Data::Float::have_nan
    );
-   
+
    my $max = $bigten->copy->bpow($emax)->bsub(1);
-   
+
    return (
       {
          name       => $name,
@@ -246,14 +246,14 @@ my $type_definitions = [
    __money_builder( 32, 4, [qw(SmallMoney)]),
    __money_builder( 64, 4, [qw(Money Currency)]),
    __money_builder(128, 6, [qw(BigMoney)]),
-   
+
    ### Float definitions ###
    {
       name       => 'NaNInf',
       test       => sub {
          my $val = $_[0];
          blessed($val) and blessed($val) =~ /^Math::Big(?:Int|Float)|^big(?:int|num)/ and (
-            $val->is_nan() or 
+            $val->is_nan() or
             $val->is_inf('+') or
             $val->is_inf('-')
          ) or
@@ -261,20 +261,20 @@ my $type_definitions = [
             Data::Float::float_is_infinite($val) or
             Data::Float::float_is_nan($val)
          );
-      },  
+      },
       message    => sub { "$_[0] is not infinity or NaN!" },
-   },
-   {
-      name       => 'NumOrNaNInf',
-      subtype_of => 'NonBigInt',
-      from       => __PACKAGE__,
-      test       => sub { is_Num($_[0]) || is_NaNInf($_[0]) },  
-      message    => sub { "$_[0] is not a number, infinity, or NaN!" },
    },
    {
       name       => 'NonBigInt',
       test       => sub { (blessed($_[0]) and blessed($_[0]) =~ /^Math::BigInt|^bigint/ and not $_[0]->upgrade) ? 0 : 1; },
       message    => sub { "$_[0] is not a float safe number!" },
+   },
+   {
+      name       => 'NumOrNaNInf',
+      subtype_of => 'NonBigInt',
+      from       => __PACKAGE__,
+      test       => sub { is_Num($_[0]) || is_NaNInf($_[0]) },
+      message    => sub { "$_[0] is not a number, infinity, or NaN!" },
    },
    __float_builder( 16,  4, [qw(ShortFloat)]),
    __float_builder( 16,  5, [qw(Half Float16 Binary16)]),
@@ -289,7 +289,7 @@ my $type_definitions = [
    __decimal_builder( 32,  7,   96, [ 'Decimal32']),
    __decimal_builder( 64, 16,  384, [ 'Decimal64']),
    __decimal_builder(128, 34, 6144, ['Decimal128']),
-   
+
    ### Char definitions ###
    {
       name       => 'WChar',
@@ -304,7 +304,7 @@ my $type_definitions = [
    __char_builder(48, [qw(Char48)]),
    __char_builder(64, [qw(Char64)]),
 ];
- 
+
 MooX::Types::MooseLike::register_types($type_definitions, __PACKAGE__);  ### TODO: MooseX translation ###
 
 my %base_tags = (
@@ -329,9 +329,9 @@ our %EXPORT_TAGS = (
    ( map { $_.'+is' => [ @{$base_tags{$_}}, @{$is_tags{'is_'.$_}} ] } keys %base_tags ),
    'all' => \@EXPORT_OK,
 );
-   
+
 1;
- 
+
 
 
 =pod
@@ -361,7 +361,7 @@ MooX::Types::CLike - C-like data types for Moo
 
    has 'baz' => (
       isa => Double  # or Float64, Binary64
-      
+
       # A Double number gets pretty big, so make sure we use big numbers
       coerce => quote_sub q{
          Math::BigFloat->new($_[0])
@@ -411,30 +411,30 @@ All available types (including lots of aliases) are listed below:
 
    ### Floats (binary) ###
    (Total, Exponent) bits; Significand precision = Total - Exponent - 1 (sign bit)
-   
+
    ( 16,  4) bits = ShortFloat
    ( 16,  5) bits = Half Float16 Binary16
    ( 32,  8) bits = Single Real Float Float32 Binary32
    ( 40,  8) bits = ExtendedSingle Float40
    ( 64, 11) bits = Double Float64 Binary64
-   ( 80, 15) bits = ExtendedDouble Float80 
+   ( 80, 15) bits = ExtendedDouble Float80
    (104,  8) bits = Decimal    # not a IEEE 754 decimal, but C#'s bizarre "128-bit" float
    (128, 15) bits = Quadruple Quad Float128 Binary128
 
    ### Floats (decimal) ###
    (Digits, Exponent Max)
-   
+
    ( 32,  8) = Decimal32
    ( 64, 11) = Decimal64
    (128, 15) = Decimal128
-   
+
    ### "Money" ###
    (Bits, Scale)
-   
+
    ( 32,  4) = SmallMoney
    ( 64,  4) = Money Currency
    (128,  6) = BigMoney  # doesn't exist; might change if it does suddenly exists
-   
+
    ### Chars ###
    WChar = Single character (with Perl's natural Unicode-compliance)
    Bit check types = Char/Char8, Char16, Char32, Char48, Char64
@@ -446,7 +446,7 @@ isn't a good idea.  So, there are some Exporter tags available, grouped by langu
 
    # NOTE: Some extra types are included to fill in the gaps for signed vs. unsigned and
    # byte vs. char.
-   
+
    :c       = Char Byte Short UShort Int UInt Long ULong Float Double ExtendedDouble
    :stdint  = Int4 UInt4 ... Int128 UInt128 (except 24-bit)
    :c#      = SByte Byte Char16 Short UShort Int UInt Long ULong Float Double Decimal
@@ -454,7 +454,7 @@ isn't a good idea.  So, there are some Exporter tags available, grouped by langu
    :tsql    = TinyInt SmallInt Int BigInt SmallMoney Money Float64 Real
    :mysql   = TinyInt SmallInt MediumInt Int BigInt (and Unsigned versions) Float Double
    :ansisql = SmallInt Int Float Real Double
-   
+
    :is_*    = All of the is_* functions for that tag
    :*+is    = Both the Moo and is_* functions for that tag
 
@@ -474,12 +474,12 @@ The term C<long> in C/C++ is ambiguous depending on the bits of the OS: 32-bits 
 64-bits for 64-bit OSs.  Since the 64-bit version makes more sense (ie: C<short E<lt> int E<lt> long>),
 that is the designation chosen.  To avoid confusion, you can just use C<LongLong> and C<ULongLong>.
 
-The confusion is even worse for float types, with the C<long> modifier sometimes meaning absolutely 
+The confusion is even worse for float types, with the C<long> modifier sometimes meaning absolutely
 nothing in certain hardware platforms.  C<Long> isn't even used in this module for those types, in
 favor of IEEE 754's "Extended" keyword.
 
 The floats will support infinity and NaN, since C floats support this.  This may not be desirable, so
-you might want to subtype the float and test for Inf/NaN if you don't want these.  Furthermore, the 
+you might want to subtype the float and test for Inf/NaN if you don't want these.  Furthermore, the
 "Perl safe" scalar tests for floats include checks to make sure it supports Inf/NaN.  However, the odds
 of it NOT supporting those (since Perl should be using IEEE 754 floats for NV) are practically zero.
 
