@@ -25,7 +25,7 @@ MooX::Types::CLike - C-like data types for Moo
 
    has 'baz' => (
       isa => Double  # or Float64, Binary64
-      
+
       # A Double number gets pretty big, so make sure we use big numbers
       coerce => quote_sub q{
          Math::BigFloat->new($_[0])
@@ -75,30 +75,30 @@ All available types (including lots of aliases) are listed below:
 
    ### Floats (binary) ###
    (Total, Exponent) bits; Significand precision = Total - Exponent - 1 (sign bit)
-   
+
    ( 16,  4) bits = ShortFloat
    ( 16,  5) bits = Half Float16 Binary16
    ( 32,  8) bits = Single Real Float Float32 Binary32
    ( 40,  8) bits = ExtendedSingle Float40
    ( 64, 11) bits = Double Float64 Binary64
-   ( 80, 15) bits = ExtendedDouble Float80 
+   ( 80, 15) bits = ExtendedDouble Float80
    (104,  8) bits = Decimal    # not a IEEE 754 decimal, but C#'s bizarre "128-bit" float
    (128, 15) bits = Quadruple Quad Float128 Binary128
 
    ### Floats (decimal) ###
    (Digits, Exponent Max)
-   
+
    ( 32,  8) = Decimal32
    ( 64, 11) = Decimal64
    (128, 15) = Decimal128
-   
+
    ### "Money" ###
    (Bits, Scale)
-   
+
    ( 32,  4) = SmallMoney
    ( 64,  4) = Money Currency
    (128,  6) = BigMoney  # doesn't exist; might change if it does suddenly exists
-   
+
    ### Chars ###
    WChar = Single character (with Perl's natural Unicode-compliance)
    Bit check types = Char/Char8, Char16, Char32, Char48, Char64
@@ -110,7 +110,7 @@ isn't a good idea.  So, there are some Exporter tags available, grouped by langu
 
    # NOTE: Some extra types are included to fill in the gaps for signed vs. unsigned and
    # byte vs. char.
-   
+
    :c       = Char Byte Short UShort Int UInt Long ULong Float Double ExtendedDouble
    :stdint  = Int4 UInt4 ... Int128 UInt128 (except 24-bit)
    :c#      = SByte Byte Char16 Short UShort Int UInt Long ULong Float Double Decimal
@@ -118,7 +118,7 @@ isn't a good idea.  So, there are some Exporter tags available, grouped by langu
    :tsql    = TinyInt SmallInt Int BigInt SmallMoney Money Float64 Real
    :mysql   = TinyInt SmallInt MediumInt Int BigInt (and Unsigned versions) Float Double
    :ansisql = SmallInt Int Float Real Double
-   
+
    :is_*    = All of the is_* functions for that tag
    :*+is    = Both the Moo and is_* functions for that tag
 
@@ -138,12 +138,12 @@ The term C<long> in C/C++ is ambiguous depending on the bits of the OS: 32-bits 
 64-bits for 64-bit OSs.  Since the 64-bit version makes more sense (ie: C<short E<lt> int E<lt> long>),
 that is the designation chosen.  To avoid confusion, you can just use C<LongLong> and C<ULongLong>.
 
-The confusion is even worse for float types, with the C<long> modifier sometimes meaning absolutely 
+The confusion is even worse for float types, with the C<long> modifier sometimes meaning absolutely
 nothing in certain hardware platforms.  C<Long> isn't even used in this module for those types, in
 favor of IEEE 754's "Extended" keyword.
 
 The floats will support infinity and NaN, since C floats support this.  This may not be desirable, so
-you might want to subtype the float and test for Inf/NaN if you don't want these.  Furthermore, the 
+you might want to subtype the float and test for Inf/NaN if you don't want these.  Furthermore, the
 "Perl safe" scalar tests for floats include checks to make sure it supports Inf/NaN.  However, the odds
 of it NOT supporting those (since Perl should be using IEEE 754 floats for NV) are practically zero.
 
@@ -189,7 +189,7 @@ Brendan Byrd <BBYRD@CPAN.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2012 by Brendan Byrd.
+This software is Copyright (c) 2013 by Brendan Byrd.
 
 This is free software, licensed under:
 
