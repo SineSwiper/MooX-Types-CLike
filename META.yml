@@ -23,7 +23,7 @@ no_index:
 provides:
   MooX::Types::CLike:
     file: lib/MooX/Types/CLike.pm
-    version: 0.95_004
+    version: 0.92
 requires:
   Data::Float: 0.008
   MooX::Types::MooseLike: 0.06
@@ -34,7 +34,7 @@ resources:
   bugtracker: https://github.com/SineSwiper/MooX-Types-CLike/issues
   homepage: https://github.com/SineSwiper/MooX-Types-CLike/wiki
   repository: git://github.com/SineSwiper/MooX-Types-CLike.git
-version: 0.95_004
+version: 0.92
 x_Dist_Zilla:
   perl:
     version: 5.016000

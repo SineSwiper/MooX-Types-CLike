@@ -50,10 +50,10 @@
    "provides" : {
       "MooX::Types::CLike" : {
          "file" : "lib/MooX/Types/CLike.pm",
-         "version" : "0.95_004"
+         "version" : "0.92"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/SineSwiper/MooX-Types-CLike/issues"
@@ -66,7 +66,7 @@
       },
       "x_irc" : "irc://irc.perl.org/#web-simple"
    },
-   "version" : "0.95_004",
+   "version" : "0.92",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.016000"
