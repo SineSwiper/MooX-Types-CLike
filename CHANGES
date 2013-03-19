@@ -1,6 +1,15 @@
 Revision History for MooX-Types-CLike
 =====================================
 
+v0.95_004 2013-03-19
+--------------------
+
+commit 93c55ba21a0a340c9ec730ca65a0e97754a85068
+Author: Brendan Byrd <Perl@ResonatorSoft.org>
+Date:   Thu Feb 28 17:31:13 2013 -0500
+
+    (Travis YML)
+
 v0.91 2012-10-02
 ----------------
 

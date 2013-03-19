@@ -1,6 +1,6 @@
 package MooX::Types::CLike;
 
-our $VERSION = '0.92'; # VERSION
+our $VERSION = '0.95_004'; # VERSION
 # ABSTRACT: C-like data types for Moo
 
 use sanity;
@@ -525,7 +525,7 @@ Brendan Byrd <BBYRD@CPAN.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2012 by Brendan Byrd.
+This software is Copyright (c) 2013 by Brendan Byrd.
 
 This is free software, licensed under:
 

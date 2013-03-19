@@ -50,10 +50,10 @@
    "provides" : {
       "MooX::Types::CLike" : {
          "file" : "lib/MooX/Types/CLike.pm",
-         "version" : "0.92"
+         "version" : "0.95_004"
       }
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/SineSwiper/MooX-Types-CLike/issues"
@@ -66,7 +66,7 @@
       },
       "x_irc" : "irc://irc.perl.org/#web-simple"
    },
-   "version" : "0.92",
+   "version" : "0.95_004",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.016000"
@@ -240,12 +240,12 @@
          {
             "class" : "Dist::Zilla::Plugin::MinimumPrereqs",
             "name" : "@Author::BBYRD/@Prereqs/MinimumPrereqs",
-            "version" : "0.91"
+            "version" : "0.92"
          },
          {
             "class" : "Dist::Zilla::Plugin::PrereqsClean",
             "name" : "@Author::BBYRD/@Prereqs/PrereqsClean",
-            "version" : "0.91"
+            "version" : "0.92"
          },
          {
             "class" : "Dist::Zilla::Plugin::CheckPrereqsIndexed",
