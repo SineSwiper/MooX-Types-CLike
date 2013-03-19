@@ -4,6 +4,12 @@ Revision History for MooX-Types-CLike
 v0.95_004 2013-03-19
 --------------------
 
+commit 7973c8e9df7d391597da4136153182d4b1b42658
+Author: Brendan Byrd <Perl@ResonatorSoft.org>
+Date:   Tue Mar 19 11:16:11 2013 -0400
+
+    Fix ordering issue with NonBigInt (now an error in newer MooseLike)
+
 commit 93c55ba21a0a340c9ec730ca65a0e97754a85068
 Author: Brendan Byrd <Perl@ResonatorSoft.org>
 Date:   Thu Feb 28 17:31:13 2013 -0500
